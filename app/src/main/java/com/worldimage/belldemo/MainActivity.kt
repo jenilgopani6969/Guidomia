@@ -1,10 +1,12 @@
 package com.worldimage.belldemo
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.core.widget.doOnTextChanged
+import android.view.View
+import android.widget.SearchView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.worldimage.belldemo.adapter.CarListAdapter
@@ -12,10 +14,11 @@ import com.worldimage.belldemo.databinding.ActivityMainBinding
 import com.worldimage.belldemo.model.CarListData
 import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     private var carList = ArrayList<CarListData>()
     private lateinit var binding: ActivityMainBinding
+    private lateinit var carListAdapter: CarListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +26,8 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-
         initData()
+        setupViews()
         setRecyclerView()
 
 
@@ -32,11 +35,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun setupViews() {
+        binding.editMake.setOnQueryTextListener(this)
+
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     private fun setRecyclerView() {
         Log.i("data", carList.toString())
-        val adapter = CarListAdapter(carList)
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.adapter = carListAdapter
+        carListAdapter.notifyDataSetChanged()
     }
 
     private fun initData() {
@@ -45,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         val gson = Gson()
         val listCar = object : TypeToken<List<CarListData>>() {}.type
         carList = gson.fromJson(jsonFileString, listCar)
+        carListAdapter = CarListAdapter()
+        carListAdapter.addData(carList)
         //add data to Room
     }
 
@@ -58,4 +69,22 @@ class MainActivity : AppCompatActivity() {
         }
         return jsonString
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        Log.i("data", "$query 1")
+        carListAdapter.filter.filter(query)
+        carListAdapter.notifyDataSetChanged()
+        return false
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onQueryTextChange(newText: String?): Boolean {
+        Log.i("data", "$newText 2")
+        carListAdapter.filter.filter(newText)
+        carListAdapter.notifyDataSetChanged()
+        return false
+    }
+
+
 }

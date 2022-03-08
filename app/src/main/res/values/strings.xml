@@ -2,4 +2,5 @@
     <string name="app_name">BellDemo</string>
     <string name="pros">Pros :</string>
     <string name="cons">Cons :</string>
+    <string name="no_item_found">No item found..</string>
 </resources>

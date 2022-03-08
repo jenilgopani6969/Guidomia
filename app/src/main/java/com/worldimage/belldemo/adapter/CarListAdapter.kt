@@ -13,9 +13,12 @@ import com.worldimage.belldemo.model.CarListData
 private var previousExpandedPosition = -1
 private var mExpandedPosition = -1
 
-class CarListAdapter (private val carList: ArrayList<CarListData>):
-    RecyclerView.Adapter<CarListAdapter.ViewHolder>()
-{
+class CarListAdapter:
+    RecyclerView.Adapter<CarListAdapter.ViewHolder>(), Filterable {
+
+    var carList: ArrayList<CarListData> = ArrayList()
+    var carListFiltered: ArrayList<CarListData> = ArrayList()
+
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var modelTxt : TextView = itemView.findViewById(R.id.recycle_model)
         var priceTxt : TextView = itemView.findViewById(R.id.recycle_price)
@@ -35,8 +38,15 @@ class CarListAdapter (private val carList: ArrayList<CarListData>):
         return ViewHolder(view)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun addData(list: List<CarListData>) {
+        carList = list as ArrayList<CarListData>
+        carListFiltered = carList
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
-        val carList :CarListData = carList[position]
+        val carList :CarListData = carListFiltered[position]
 
         holder.modelTxt.text = carList.model
         holder.priceTxt.text = carList.marketPrice.toString()
@@ -96,6 +106,36 @@ class CarListAdapter (private val carList: ArrayList<CarListData>):
     }
 
     override fun getItemCount(): Int {
-        return carList.size
+        return carListFiltered.size
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charString = constraint?.toString() ?: ""
+                carListFiltered = if (charString.isEmpty()) carList else {
+                    val filteredList = ArrayList<CarListData>()
+                    carList
+                        .filter {
+                            it.make.lowercase().startsWith(charString.lowercase()) ||
+                                    it.model.lowercase().startsWith(charString.lowercase())
+                        }
+                        .forEach { filteredList.add(it) }
+                    filteredList
+
+                }
+                return FilterResults().apply { values = carListFiltered }
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+
+                carListFiltered = if (results?.values == null)
+                    ArrayList()
+                else
+                    results.values as ArrayList<CarListData>
+                notifyDataSetChanged()
+            }
+        }
     }
 }

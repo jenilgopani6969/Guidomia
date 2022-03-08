@@ -72,36 +72,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:ignore="HardcodedText" />
-            <EditText
-                android:layout_marginTop="16dp"
+
+            <SearchView
+                android:queryBackground="@android:color/transparent"
+                android:searchIcon="@null"
                 android:background="@drawable/shape_edit"
-                android:hint="Any Make"
+                android:queryHint="Any Make / Any Model"
+                android:iconifiedByDefault="false"
+                android:layout_marginTop="16dp"
+                android:paddingStart="-8dp"
                 android:id="@+id/editMake"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="Make"
-                android:inputType="text"
-                tools:ignore="HardcodedText,LabelFor" />
-
-            <EditText
-                android:layout_marginTop="16dp"
-                android:background="@drawable/shape_edit"
-                android:hint="Any Model"
-                android:id="@+id/editModel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="Make"
-                android:inputType="text"
-                tools:ignore="HardcodedText,LabelFor" />
+                tools:ignore="RtlSymmetry" />
 
         </LinearLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/txtNoItemFound"
+            android:gravity="center"
+            android:text="@string/no_item_found"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
 
