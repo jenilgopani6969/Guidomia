@@ -16,8 +16,8 @@ private var mExpandedPosition = -1
 class CarListAdapter:
     RecyclerView.Adapter<CarListAdapter.ViewHolder>(), Filterable {
 
-    var carList: ArrayList<CarListData> = ArrayList()
-    var carListFiltered: ArrayList<CarListData> = ArrayList()
+    lateinit var carList: List<CarListData>
+    lateinit var carListFiltered: List<CarListData>
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var modelTxt : TextView = itemView.findViewById(R.id.recycle_model)
@@ -45,13 +45,17 @@ class CarListAdapter:
         notifyDataSetChanged()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val carList :CarListData = carListFiltered[position]
 
         holder.modelTxt.text = carList.model
-        holder.priceTxt.text = carList.marketPrice.toString()
-        holder.ratingStar.rating = carList.rating.toFloat()
 
+        //list price
+        val convPrice: Int = (carList.marketPrice.toInt()/1000)
+        holder.priceTxt.text = "${convPrice}k"
+
+        holder.ratingStar.rating = carList.rating.toFloat()
 
         //listPros
         if (carList.prosList.count() == 0) {
@@ -133,7 +137,7 @@ class CarListAdapter:
                 carListFiltered = if (results?.values == null)
                     ArrayList()
                 else
-                    results.values as ArrayList<CarListData>
+                    results.values as List<CarListData>
                 notifyDataSetChanged()
             }
         }

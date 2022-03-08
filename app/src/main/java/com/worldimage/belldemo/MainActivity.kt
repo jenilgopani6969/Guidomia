@@ -7,16 +7,22 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.SearchView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.worldimage.belldemo.adapter.CarListAdapter
 import com.worldimage.belldemo.databinding.ActivityMainBinding
 import com.worldimage.belldemo.model.CarListData
+import com.worldimage.belldemo.viewmodel.MainActivityViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
-    private var carList = ArrayList<CarListData>()
+    private var carList = listOf<CarListData>()
     private lateinit var binding: ActivityMainBinding
     private lateinit var carListAdapter: CarListAdapter
 
@@ -26,49 +32,34 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         val view = binding.root
         setContentView(view)
 
-        initData()
         setupViews()
+        initViewModel()
         setRecyclerView()
+    }
 
-
-
-
+    @SuppressLint
+    private fun initViewModel() {
+        val viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel.getVehicleList().observe(this, Observer<List<CarListData>> {
+            if (it != null){
+                carList = it
+            }
+        })
+        carList = viewModel.makeApiCall()
     }
 
     private fun setupViews() {
         binding.editMake.setOnQueryTextListener(this)
-
-
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setRecyclerView() {
-        Log.i("data", carList.toString())
+        carListAdapter = CarListAdapter()
+        carListAdapter.addData(carList)
         binding.recyclerView.adapter = carListAdapter
         carListAdapter.notifyDataSetChanged()
     }
 
-    private fun initData() {
-
-        val jsonFileString = getData(this)
-        val gson = Gson()
-        val listCar = object : TypeToken<List<CarListData>>() {}.type
-        carList = gson.fromJson(jsonFileString, listCar)
-        carListAdapter = CarListAdapter()
-        carListAdapter.addData(carList)
-        //add data to Room
-    }
-
-    private fun getData(context: Context): String? {
-        val jsonString: String
-        try {
-            jsonString = context.assets.open("jsonfile.json").bufferedReader().use { it.readText() }
-        } catch (ioException : IOException) {
-            ioException.printStackTrace()
-            return null
-        }
-        return jsonString
-    }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onQueryTextSubmit(query: String?): Boolean {
