@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BellDemo</string>
+    <string name="pros">Pros :</string>
+    <string name="cons">Cons :</string>
 </resources>
