@@ -3,4 +3,6 @@
     <string name="pros">Pros :</string>
     <string name="cons">Cons :</string>
     <string name="no_item_found">No item found..</string>
+    <string name="loading">Loading....</string>
+    <string name="no_data_available">No data available</string>
 </resources>

@@ -9,26 +9,24 @@ import com.worldimage.belldemo.model.CarListData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
+import kotlinx.coroutines.flow.Flow
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Module
 @DisableInstallInCheck
-class AppRepository @Inject constructor(private val appDao: AppDao,private val context: Context){
+class AppRepository @Inject constructor(private val appDao: AppDao, private val context: Context) {
 
     private var carList = ArrayList<CarListData>()
 
-    fun getVehicleList(): LiveData<List<CarListData>> {
-        return appDao.getAllRecords()
-    }
+    fun getVehicleList(): Flow<List<CarListData>> = appDao.getAllRecords()
 
     private fun insertVehicleList(listings: CarListData) {
         appDao.insertRecords(listings)
     }
 
-    @Provides
-    fun makeApiCall() : ArrayList<CarListData>{
+    fun refreshVehicleList(): ArrayList<CarListData> {
         val jsonFileString = getData(context)
         val gson = Gson()
         val listCar = object : TypeToken<List<CarListData>>() {}.type
@@ -46,7 +44,7 @@ class AppRepository @Inject constructor(private val appDao: AppDao,private val c
         val jsonString: String
         try {
             jsonString = context.assets.open("jsonfile.json").bufferedReader().use { it.readText() }
-        } catch (ioException : IOException) {
+        } catch (ioException: IOException) {
             ioException.printStackTrace()
             return null
         }
