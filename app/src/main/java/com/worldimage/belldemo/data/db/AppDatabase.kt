@@ -1,14 +1,14 @@
-package com.worldimage.belldemo.db
+package com.worldimage.belldemo.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.worldimage.belldemo.model.CarListData
-import com.worldimage.belldemo.model.StringListConverter
+import com.worldimage.belldemo.data.remote.dto.CarDto
+import com.worldimage.belldemo.data.remote.dto.StringListConverter
 
-@Database(entities = [CarListData::class], version = 1, exportSchema = false)
+@Database(entities = [CarDto::class], version = 1, exportSchema = false)
 @TypeConverters(StringListConverter::class)
 abstract class AppDatabase: RoomDatabase() {
 

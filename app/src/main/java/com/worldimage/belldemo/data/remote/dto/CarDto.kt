@@ -1,13 +1,14 @@
-package com.worldimage.belldemo.model
+package com.worldimage.belldemo.data.remote.dto
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import com.worldimage.belldemo.domain.model.Car
 
 
 @Entity(tableName = "vehicleList")
-data class CarListData(
+data class CarDto(
     @ColumnInfo(name = "consList")val consList: List<String>,
     @ColumnInfo(name = "customerPrice")val customerPrice: Int,
     @ColumnInfo(name = "make")val make: String,
@@ -30,4 +31,16 @@ class StringListConverter {
     fun toString(stringList: List<String>): String {
         return stringList.joinToString(separator = ",")
     }
+}
+
+fun CarDto.toCar(): Car {
+    return Car(
+        consList = consList,
+        customerPrice = customerPrice,
+        make = make,
+        marketPrice = marketPrice,
+        model = model,
+        prosList = prosList,
+        rating = rating
+    )
 }

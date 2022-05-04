@@ -1,4 +1,4 @@
-package com.worldimage.belldemo.adapter
+package com.worldimage.belldemo.presentation
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.worldimage.belldemo.R
-import com.worldimage.belldemo.model.CarListData
+import com.worldimage.belldemo.domain.model.Car
 
 private var previousExpandedPosition = -1
 private var mExpandedPosition = -1
@@ -16,8 +16,8 @@ private var mExpandedPosition = -1
 class CarListAdapter:
     RecyclerView.Adapter<CarListAdapter.ViewHolder>(), Filterable {
 
-    lateinit var carList: List<CarListData>
-    lateinit var carListFiltered: List<CarListData>
+    lateinit var carList: List<Car>
+    lateinit var carListFiltered: List<Car>
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var modelTxt : TextView = itemView.findViewById(R.id.recycle_model)
@@ -39,15 +39,15 @@ class CarListAdapter:
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addData(list: List<CarListData>) {
-        carList = list as ArrayList<CarListData>
+    fun addData(list: List<Car>) {
+        carList = list as ArrayList<Car>
         carListFiltered = carList
         notifyDataSetChanged()
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
-        val carList :CarListData = carListFiltered[position]
+        val carList : Car = carListFiltered[position]
 
         holder.modelTxt.text = carList.model
 
@@ -118,7 +118,7 @@ class CarListAdapter:
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val charString = constraint?.toString() ?: ""
                 carListFiltered = if (charString.isEmpty()) carList else {
-                    val filteredList = ArrayList<CarListData>()
+                    val filteredList = ArrayList<Car>()
                     carList
                         .filter {
                             it.make.lowercase().startsWith(charString.lowercase()) ||
@@ -137,7 +137,7 @@ class CarListAdapter:
                 carListFiltered = if (results?.values == null)
                     ArrayList()
                 else
-                    results.values as List<CarListData>
+                    results.values as List<Car>
                 notifyDataSetChanged()
             }
         }

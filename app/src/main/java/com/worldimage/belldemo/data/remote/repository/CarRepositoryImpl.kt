@@ -1,35 +1,32 @@
-package com.worldimage.belldemo.repository
+package com.worldimage.belldemo.data.remote.repository
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.worldimage.belldemo.db.AppDao
-import com.worldimage.belldemo.model.CarListData
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.migration.DisableInstallInCheck
-import kotlinx.coroutines.flow.Flow
+import com.worldimage.belldemo.data.remote.dto.CarDto
+import com.worldimage.belldemo.data.db.AppDao
+import com.worldimage.belldemo.domain.repository.CarRepository
 import java.io.IOException
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Module
-@DisableInstallInCheck
-class AppRepository @Inject constructor(private val appDao: AppDao, private val context: Context) {
+class CarRepositoryImpl @Inject constructor(
+    private val appDao: AppDao, private val context: Context
+) : CarRepository {
 
-    private var carList = ArrayList<CarListData>()
+    private var carList = ArrayList<CarDto>()
 
-    fun getVehicleList(): Flow<List<CarListData>> = appDao.getAllRecords()
+    override suspend fun getCars(): List<CarDto> {
+        return appDao.getAllRecords()
+    }
 
-    private fun insertVehicleList(listings: CarListData) {
+    private fun insertVehicleList(listings: CarDto) {
         appDao.insertRecords(listings)
     }
 
-    fun refreshVehicleList(): ArrayList<CarListData> {
+    override suspend fun refreshVehicleList(): ArrayList<CarDto> {
         val jsonFileString = getData(context)
         val gson = Gson()
-        val listCar = object : TypeToken<List<CarListData>>() {}.type
+        val listCar = object : TypeToken<List<CarDto>>() {}.type
         carList = gson.fromJson(jsonFileString, listCar)
 
         appDao.deleteAllRecords()
@@ -50,4 +47,6 @@ class AppRepository @Inject constructor(private val appDao: AppDao, private val 
         }
         return jsonString
     }
+
+
 }

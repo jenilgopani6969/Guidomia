@@ -1,9 +1,11 @@
-package com.worldimage.belldemo.repository
+package com.worldimage.belldemo.di
 
 import android.app.Application
 import android.content.Context
-import com.worldimage.belldemo.db.AppDao
-import com.worldimage.belldemo.db.AppDatabase
+import com.worldimage.belldemo.data.db.AppDao
+import com.worldimage.belldemo.data.db.AppDatabase
+import com.worldimage.belldemo.data.remote.repository.CarRepositoryImpl
+import com.worldimage.belldemo.domain.repository.CarRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppService {
+class AppModule {
 
     @Provides
     @Singleton
@@ -30,4 +32,9 @@ class AppService {
     @Provides
     fun provideContext(application: Application): Context = application.applicationContext
 
+    @Provides
+    @Singleton
+    fun provideCarRepository(appDao: AppDao, context: Context): CarRepository {
+        return CarRepositoryImpl(appDao, context)
+    }
 }
