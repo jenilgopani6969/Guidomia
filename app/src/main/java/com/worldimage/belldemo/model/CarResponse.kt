@@ -1,6 +1,7 @@
-package com.worldimage.belldemo.domain.model
+package com.worldimage.belldemo.model
 
-data class Car(
+
+data class CarResponse(
     val consList: List<String>,
     val customerPrice: Int,
     val make: String,

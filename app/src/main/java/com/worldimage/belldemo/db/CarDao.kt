@@ -1,14 +1,11 @@
-package com.worldimage.belldemo.data.remote.dto
+package com.worldimage.belldemo.db
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import com.worldimage.belldemo.domain.model.Car
-
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "vehicleList")
-data class CarDto(
+data class CarListData(
     @ColumnInfo(name = "consList")val consList: List<String>,
     @ColumnInfo(name = "customerPrice")val customerPrice: Int,
     @ColumnInfo(name = "make")val make: String,
@@ -18,7 +15,7 @@ data class CarDto(
     @ColumnInfo(name = "rating")val rating: Int
 ) {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo("table_id") var table_id: Int = 0
+    @ColumnInfo("table_id") var tableId: Int = 0
 }
 
 class StringListConverter {
@@ -33,14 +30,16 @@ class StringListConverter {
     }
 }
 
-fun CarDto.toCar(): Car {
-    return Car(
-        consList = consList,
-        customerPrice = customerPrice,
-        make = make,
-        marketPrice = marketPrice,
-        model = model,
-        prosList = prosList,
-        rating = rating
-    )
+@Dao
+interface CarDao {
+
+    @Query("SELECT * FROM vehicleList")
+    fun getAllCars(): List<CarListData>?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCars(listings: List<CarListData> )
+
+    @Query("DELETE FROM vehicleList")
+    fun deleteAllCars()
+
 }
