@@ -2,7 +2,6 @@ package com.worldimage.belldemo.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,15 +42,12 @@ class CarListAdapter :
     fun addData(list: List<CarListData>) {
         carList = list as ArrayList<CarListData>
         carListFiltered = carList
-        Log.e("carListFiltered",carListFiltered.size.toString())
         this.notifyDataSetChanged()
-        Log.e("dataSetChanged","true")
     }
 
 
 
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
-        Log.e("dataSetChanged","true")
         val carList :CarListData = carListFiltered[position]
 
         holder.modelTxt.text = carList.model
@@ -63,7 +59,7 @@ class CarListAdapter :
         holder.ratingStar.rating = carList.rating.toFloat()
 
         //listPros
-        if (carList.prosList.count() == 0) {
+        if (carList.prosList.isEmpty()) {
             holder.linProsMain.visibility = View.GONE
         } else {
             holder.linPros.removeAllViews()
@@ -77,7 +73,7 @@ class CarListAdapter :
 
 
         //listCons
-        if (carList.consList.count() == 0) {
+        if (carList.consList.isEmpty()) {
             holder.linConsMain.visibility = View.GONE
         } else {
             holder.linCons.removeAllViews()

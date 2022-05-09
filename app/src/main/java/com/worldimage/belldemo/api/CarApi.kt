@@ -3,7 +3,6 @@ package com.worldimage.belldemo.api
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.worldimage.belldemo.BellApplication
 import com.worldimage.belldemo.model.CarResponse
 import java.io.IOException
 import javax.inject.Inject
@@ -13,7 +12,7 @@ class CarApi @Inject constructor(
     private val context : Context
 ){
 
-    /* here we are reading cars content from json */
+    /* reading cars content from json */
 
     fun getCars(): ArrayList<CarResponse>? {
         val jsonFileString: String

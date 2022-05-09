@@ -12,7 +12,6 @@ class CarUseCase @Inject constructor(
     operator fun invoke(): Flow<CarListUIState> = flow {
         val cars = carRepository.getVehicleList()
         cars?.let { emit(CarListUIState.Success(it)) }
-
     }
 
 }

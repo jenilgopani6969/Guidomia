@@ -1,10 +1,8 @@
 package com.worldimage.belldemo.ui
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.Log
-import android.widget.LinearLayout
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -22,21 +20,21 @@ import com.worldimage.belldemo.viewmodel.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(R.layout.activity_main), SearchView.OnQueryTextListener {
 
     private var carList = listOf<CarListData>()
     private lateinit var binding: ActivityMainBinding
-    private var carListAdapter: CarListAdapter = CarListAdapter()
+    private lateinit var carListAdapter: CarListAdapter
 
     private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        binding.root
+        val view = binding.root
+        setContentView(view)
         setupViews()
         setRecyclerView()
         loadData()
@@ -45,26 +43,30 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), SearchView.OnQue
 
     private fun loadData() {
         viewModel.uiState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED).onEach {
-                when (it) {
-                    is CarListUIState.Loading -> {
-                        Toast.makeText(applicationContext, getString(R.string.loading), Toast.LENGTH_SHORT).show()
-                    }
-                    is CarListUIState.Success -> {
-                        it.data?.let{ cars ->
-                           updateUI(cars)
-                        }
-
-                    }
-                    is CarListUIState.Error -> {
-                        Toast.makeText(applicationContext, it.message, Toast.LENGTH_SHORT).show()
-                    }
+            when (it) {
+                is CarListUIState.Loading -> {
+                    Toast.makeText(
+                        applicationContext,
+                        getString(R.string.loading),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-            }.launchIn(lifecycleScope)
+                is CarListUIState.Success -> {
+                    it.data?.let { cars ->
+                        updateUI(cars)
+                    }
+
+                }
+                is CarListUIState.Error -> {
+                    Toast.makeText(applicationContext, it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }.launchIn(lifecycleScope)
     }
 
     private fun updateUI(cars: List<CarListData>) {
+        carList = cars
         setRecyclerView()
-        carList =  cars
         carListAdapter.addData(carList)
     }
 
@@ -75,8 +77,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), SearchView.OnQue
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setRecyclerView() {
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
         carListAdapter = CarListAdapter()
-        with(binding.recyclerView){
+        with(binding.recyclerView) {
             adapter = carListAdapter
             carListAdapter.notifyDataSetChanged()
         }

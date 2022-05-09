@@ -1,4 +1,4 @@
-package com.worldimage.belldemo.repository
+package com.worldimage.belldemo
 
 import android.app.Application
 import android.content.Context

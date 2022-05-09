@@ -1,6 +1,5 @@
 package com.worldimage.belldemo.repository
 
-import androidx.lifecycle.LiveData
 import com.worldimage.belldemo.api.CarApi
 import com.worldimage.belldemo.db.CarDao
 import com.worldimage.belldemo.db.CarListData
