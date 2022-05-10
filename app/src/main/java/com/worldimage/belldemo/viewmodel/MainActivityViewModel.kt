@@ -25,17 +25,7 @@ class MainActivityViewModel @Inject constructor(
 
     private fun getCars() {
         getCarUseCase.invoke().onEach { state ->
-            when (state) {
-                is CarListUIState.Success -> {
-                    _uiState.value = CarListUIState.Success(state.data)
-                }
-                is CarListUIState.Error -> {
-                    _uiState.value = CarListUIState.Error("something went wrong")
-                }
-                is CarListUIState.Loading -> {
-                    _uiState.value = CarListUIState.Loading
-                }
-            }
+            _uiState.value = state
         }.launchIn(viewModelScope)
     }
 

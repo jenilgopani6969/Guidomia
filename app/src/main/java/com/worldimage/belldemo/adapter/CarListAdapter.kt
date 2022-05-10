@@ -18,7 +18,7 @@ class CarListAdapter :
     RecyclerView.Adapter<CarListAdapter.ViewHolder>(), Filterable {
 
     lateinit var carList: List<CarListData>
-    lateinit var carListFiltered: List<CarListData>
+    private   var carListFiltered: List<CarListData> = arrayListOf()
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var modelTxt : TextView = itemView.findViewById(R.id.recycle_model)
         var priceTxt : TextView = itemView.findViewById(R.id.recycle_price)
