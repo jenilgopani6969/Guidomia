@@ -6,6 +6,9 @@
     "customerPrice": 120000,
     "make": "Land Rover",
     "marketPrice": 125000,
+    "color": "gray",
+    "transmission": "automatic",
+    "numberOfCylinders": 6,
     "model": "Range Rover",
     "prosList": [
       "You can go everywhere",
@@ -20,6 +23,9 @@
     "customerPrice": 220000,
     "make": "Alpine",
     "marketPrice": 225000,
+    "color": "red",
+    "transmission": "manual",
+    "numberOfCylinders": 6,
     "model": "Roadster",
     "prosList": [
       "This car is so fast",
@@ -35,7 +41,10 @@
     "customerPrice": 65000,
     "make": "BMW",
     "marketPrice": 55900,
-    "model": "3300i",
+    "color": "black",
+    "transmission": "manual",
+    "numberOfCylinders": "6",
+    "model": "330i",
     "prosList": [
       "Your average business man car",
       "Can bring the family home safely",
@@ -51,6 +60,9 @@
     "customerPrice": 95000,
     "make": "Mercedes Benz",
     "marketPrice": 85900,
+    "color": "blue",
+    "transmission": "automatic",
+    "numberOfCylinders": 4,
     "model": "GLE coupe",
     "prosList": [],
     "rating": 2
